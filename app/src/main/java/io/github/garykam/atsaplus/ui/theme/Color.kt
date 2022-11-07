@@ -1,4 +1,4 @@
-package io.github.garykam.atsa.ui.theme
+package io.github.garykam.atsaplus.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
