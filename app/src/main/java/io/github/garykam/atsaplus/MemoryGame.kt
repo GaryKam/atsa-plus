@@ -6,17 +6,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import java.util.*
-import kotlin.concurrent.schedule
 
 @Composable
-fun MemoryGame(viewModel: MemoryGameViewModel) {
-    var hasStarted by remember { mutableStateOf(false) }
-
+fun MemoryGame(viewModel: MemoryGameViewModel, onStart: () -> Unit, onClick: (Int) -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -26,61 +22,51 @@ fun MemoryGame(viewModel: MemoryGameViewModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (hasStarted) {
+            if (viewModel.hasGameStarted()) {
                 Text(
                     text = "Correct: ${viewModel.getCorrect()}",
                     modifier = Modifier.padding(bottom = 20.dp),
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Text(
-                    text = viewModel.getNumber().toString(),
+                    text = viewModel.getCurrentNumber().toString(),
                     style = MaterialTheme.typography.displayLarge
                 )
             } else {
-                Button(onClick = {
-                    hasStarted = true
-                    viewModel.nextNumber()
-
-                    Timer().schedule(2000) {
-                        viewModel.nextNumber()
-                    }
-                }) {
+                Button(onClick = onStart) {
                     Text(text = "Start")
                 }
             }
         }
 
-        if (hasStarted) {
+        if (viewModel.hasGameStarted()) {
             Column(
                 modifier = Modifier.padding(bottom = 40.dp),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                NumberPad(viewModel)
+                NumberPad(onClick)
             }
         }
     }
 }
 
 @Composable
-private fun NumberPad(viewModel: MemoryGameViewModel) {
-    NumberInput(range = (1..3), viewModel)
-    NumberInput(range = (4..6), viewModel)
-    NumberInput(range = (7..9), viewModel)
+private fun NumberPad(onClick: (Int) -> Unit) {
+    NumberInput(range = (1..3), onClick)
+    NumberInput(range = (4..6), onClick)
+    NumberInput(range = (7..9), onClick)
 }
 
 @Composable
-private fun NumberInput(range: IntRange, viewModel: MemoryGameViewModel) {
+private fun NumberInput(range: IntRange, onClick: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        for (i in range) {
-            Button(onClick = {
-                viewModel.checkAnswer(i)
-                viewModel.nextNumber()
-            }) {
-                Text(text = i.toString())
+        for (number in range) {
+            Button(onClick = { onClick(number) }) {
+                Text(text = number.toString())
             }
         }
     }

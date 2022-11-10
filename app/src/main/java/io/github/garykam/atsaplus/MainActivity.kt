@@ -8,14 +8,18 @@ import androidx.compose.runtime.Composable
 import io.github.garykam.atsaplus.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: MemoryGameViewModel by viewModels()
+    private val gameViewModel: MemoryGameViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             AtsaPlusApp {
-                MemoryGame(viewModel)
+                MemoryGame(
+                    viewModel = gameViewModel,
+                    onStart = { gameViewModel.startGame() },
+                    onClick = { gameViewModel.checkAnswer(it) }
+                )
             }
         }
     }
