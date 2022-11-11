@@ -1,4 +1,4 @@
-package io.github.garykam.atsaplus
+package io.github.garykam.atsaplus.utils
 
 fun IntRange.randomButExclude(exclude: Int): Int {
     val random = random()

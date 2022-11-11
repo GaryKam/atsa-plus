@@ -1,7 +1,10 @@
-package io.github.garykam.atsaplus
+package io.github.garykam.atsaplus.games.memoryvariable
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -10,9 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import io.github.garykam.atsaplus.utils.NumberRow
 
 @Composable
-fun MemoryGame(viewModel: MemoryGameViewModel, onStart: () -> Unit, onClick: (Int) -> Unit) {
+fun MemoryVariableGame(
+    viewModel: MemoryVariableGameViewModel,
+    onStart: () -> Unit,
+    onClick: (Int) -> Unit
+) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -29,9 +37,10 @@ fun MemoryGame(viewModel: MemoryGameViewModel, onStart: () -> Unit, onClick: (In
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Text(
-                    text = viewModel.getCurrentNumber().toString(),
+                    text = viewModel.getEquation(),
                     style = MaterialTheme.typography.displayLarge
                 )
+
             } else {
                 Button(onClick = onStart) {
                     Text(text = "Start")
@@ -45,28 +54,7 @@ fun MemoryGame(viewModel: MemoryGameViewModel, onStart: () -> Unit, onClick: (In
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                NumberPad(onClick)
-            }
-        }
-    }
-}
-
-@Composable
-private fun NumberPad(onClick: (Int) -> Unit) {
-    NumberInput(range = (1..3), onClick)
-    NumberInput(range = (4..6), onClick)
-    NumberInput(range = (7..9), onClick)
-}
-
-@Composable
-private fun NumberInput(range: IntRange, onClick: (Int) -> Unit) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        for (number in range) {
-            Button(onClick = { onClick(number) }) {
-                Text(text = number.toString())
+                NumberRow((1..4), onClick)
             }
         }
     }
