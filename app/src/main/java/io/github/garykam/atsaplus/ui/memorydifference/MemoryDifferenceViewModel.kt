@@ -1,14 +1,13 @@
-package io.github.garykam.atsaplus.games.memorydifference
+package io.github.garykam.atsaplus.ui.memorydifference
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.garykam.atsaplus.utils.randomButExclude
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-class MemoryDifferenceGameViewModel : ViewModel() {
+class MemoryDifferenceViewModel : ViewModel() {
     private var gameStarted = mutableStateOf(false)
     private val numberList: MutableList<Int> = mutableListOf()
     private var previousNumber = mutableStateOf(-1)
@@ -54,4 +53,9 @@ class MemoryDifferenceGameViewModel : ViewModel() {
     fun getCurrentNumber() = currentNumber.value
 
     fun getCorrect() = correct.value
+}
+
+private fun IntRange.randomButExclude(exclude: Int): Int {
+    val random = random()
+    return if (random != exclude) random else randomButExclude(exclude)
 }

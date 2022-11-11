@@ -1,4 +1,4 @@
-package io.github.garykam.atsaplus.games.memoryvariable
+package io.github.garykam.atsaplus.ui.memoryvariable
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MemoryVariableGameViewModel : ViewModel() {
+class MemoryVariableViewModel : ViewModel() {
     private var gameStarted = mutableStateOf(false)
     private var equation = mutableStateOf("")
     private var a = -1

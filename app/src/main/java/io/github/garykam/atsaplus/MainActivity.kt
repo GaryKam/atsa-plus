@@ -3,41 +3,35 @@ package io.github.garykam.atsaplus
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import io.github.garykam.atsaplus.games.memorydifference.MemoryDifferenceGame
-import io.github.garykam.atsaplus.games.memorydifference.MemoryDifferenceGameViewModel
-import io.github.garykam.atsaplus.games.memoryvariable.MemoryVariableGame
-import io.github.garykam.atsaplus.games.memoryvariable.MemoryVariableGameViewModel
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import io.github.garykam.atsaplus.navigation.AppNavigation
 import io.github.garykam.atsaplus.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
-    private val memoryDifferenceGameViewModel: MemoryDifferenceGameViewModel by viewModels()
-    private val memoryVariableGameViewModel: MemoryVariableGameViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AtsaPlusApp {
-                /*MemoryDifferenceGame(
-                    viewModel = gameViewModel,
-                    onStart = { gameViewModel.startGame() },
-                    onClick = { gameViewModel.checkAnswer(it) }
-                )*/
-                MemoryVariableGame(
-                    viewModel = memoryVariableGameViewModel,
-                    onStart = { memoryVariableGameViewModel.startGame() },
-                    onClick = { memoryVariableGameViewModel.checkAnswer(it) }
-                )
-            }
+            AtsaPlusApp()
         }
     }
 }
 
 @Composable
-private fun AtsaPlusApp(content: @Composable () -> Unit) {
+private fun AtsaPlusApp() {
     AppTheme {
-        content()
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background)
+        ) {
+            AppNavigation(rememberNavController())
+        }
     }
 }
