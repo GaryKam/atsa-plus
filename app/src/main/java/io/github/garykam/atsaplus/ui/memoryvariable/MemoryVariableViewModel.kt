@@ -8,10 +8,8 @@ import kotlinx.coroutines.launch
 
 class MemoryVariableViewModel : ViewModel() {
     private var gameStarted = mutableStateOf(false)
+    private var variable = Variable.NONE
     private var equation = mutableStateOf("")
-    private var a = -1
-    private var b = -1
-    private var c = -1
     private var correct = mutableStateOf(0)
     private var awaitingAnswer = false
 
@@ -24,15 +22,8 @@ class MemoryVariableViewModel : ViewModel() {
         if (awaitingAnswer) {
             awaitingAnswer = false
 
-            when (equation.value) {
-                "A =" -> a
-                "B =" -> b
-                "C =" -> c
-                else -> -1
-            }.also {
-                if (answer == it) {
-                    correct.value++
-                }
+            if (answer == variable.value) {
+                correct.value++
             }
 
             promptForAnswer()
@@ -40,40 +31,42 @@ class MemoryVariableViewModel : ViewModel() {
     }
 
     private fun updateEquation() {
-        a = (1..4).random()
-        b = (1..4).random()
-        c = (1..4).random()
+        Variable.A.randomize()
+        Variable.B.randomize()
+        Variable.C.randomize()
 
         viewModelScope.launch {
-            delay(1000L)
-            equation.value = "A = $a"
-            delay(2000L)
-            equation.value = ""
-            delay(1000L)
-            equation.value = "B = $b"
-            delay(2000L)
-            equation.value = ""
-            delay(1000L)
-            equation.value = "C = $c"
-            delay(2000L)
-            equation.value = ""
+            updateEquationVariable(Variable.A)
+            updateEquationVariable(Variable.B)
+            updateEquationVariable(Variable.C)
             delay(2000L)
 
+            variable = Variable.NONE
             promptForAnswer()
         }
     }
 
-    private fun promptForAnswer() {
-        viewModelScope.launch {
-            when (equation.value) {
-                "" -> "A ="
-                "A =" -> "B ="
-                "B =" -> "C ="
-                else -> ""
-            }.also {
-                equation.value = it
-            }
+    private suspend fun updateEquationVariable(variable: Variable) {
+        delay(1000L)
+        equation.value = variable.name + " = " + variable.value
+        delay(2000L)
+        equation.value = ""
+    }
 
+    private fun promptForAnswer() {
+        variable = when (variable) {
+            Variable.NONE -> Variable.A
+            Variable.A -> Variable.B
+            Variable.B -> Variable.C
+            Variable.C -> {
+                equation.value = ""
+                updateEquation()
+                return
+            }
+        }
+
+        viewModelScope.launch {
+            equation.value = variable.name + " ="
             awaitingAnswer = true
         }
     }
@@ -83,4 +76,15 @@ class MemoryVariableViewModel : ViewModel() {
     fun getEquation() = equation.value
 
     fun getCorrect() = correct.value
+
+    private enum class Variable(var value: Int = -1) {
+        A,
+        B,
+        C,
+        NONE;
+
+        fun randomize() {
+            value = (1..4).random()
+        }
+    }
 }

@@ -4,16 +4,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
+data class UiState(
+    val gameStarted: Boolean = false,
+    val currentNumber: Int = -1,
+    val correct: Int = 0
+)
+
 class MemoryDifferenceViewModel : ViewModel() {
-    private var gameStarted = mutableStateOf(false)
-    private val numberList: MutableList<Int> = mutableListOf()
+    private var _gameStarted = MutableStateFlow(false)
+    private var _currentNumber = MutableStateFlow(-1)
+    private var _correct = MutableStateFlow(0)
+    private val numberList = mutableListOf<Int>()
     private var previousNumber = mutableStateOf(-1)
-    private var currentNumber = mutableStateOf(-1)
-    private var correct = mutableStateOf(0)
-    private var index: Int = 0
+    private var index = 0
+
+    val uiState: StateFlow<UiState> =
+        combine(_gameStarted, _currentNumber, _correct) { gameStarted, currentNumber, correct ->
+            UiState(gameStarted, currentNumber, correct)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), UiState())
 
     init {
         var num = (1..9).random()
@@ -26,8 +38,8 @@ class MemoryDifferenceViewModel : ViewModel() {
     }
 
     fun startGame() {
-        gameStarted.value = true
-        currentNumber.value = numberList[0]
+        _gameStarted.value = true
+        _currentNumber.value = numberList[0]
 
         viewModelScope.launch {
             delay(2000L)
@@ -36,23 +48,17 @@ class MemoryDifferenceViewModel : ViewModel() {
     }
 
     fun checkAnswer(answer: Int) {
-        if (answer == abs(previousNumber.value - currentNumber.value)) {
-            correct.value++
+        if (answer == abs(previousNumber.value - _currentNumber.value)) {
+            _correct.value++
         }
 
         updateNumber()
     }
 
     private fun updateNumber() {
-        previousNumber.value = currentNumber.value
-        currentNumber.value = numberList[++index]
+        previousNumber.value = _currentNumber.value
+        _currentNumber.value = numberList[++index]
     }
-
-    fun hasGameStarted() = gameStarted.value
-
-    fun getCurrentNumber() = currentNumber.value
-
-    fun getCorrect() = correct.value
 }
 
 private fun IntRange.randomButExclude(exclude: Int): Int {

@@ -5,6 +5,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,15 +22,17 @@ fun MemoryDifferenceScreen(viewModel: MemoryDifferenceViewModel = viewModel()) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (viewModel.hasGameStarted()) {
+        val uiState by viewModel.uiState.collectAsState()
+
+        if (uiState.gameStarted) {
             Text(
-                text = "Correct: ${viewModel.getCorrect()}",
+                text = "Correct: ${uiState.correct}",
                 modifier = Modifier.padding(bottom = 20.dp),
                 style = MaterialTheme.typography.headlineMedium
             )
 
             Text(
-                text = viewModel.getCurrentNumber().toString(),
+                text = uiState.currentNumber.toString(),
                 style = MaterialTheme.typography.displayLarge
             )
 
