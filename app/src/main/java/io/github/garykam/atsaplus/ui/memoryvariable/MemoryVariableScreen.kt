@@ -1,9 +1,9 @@
 package io.github.garykam.atsaplus.ui.memoryvariable
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,7 +12,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.garykam.atsaplus.utils.NumberRow
 
 @Composable
-fun MemoryVariableScreen(viewModel: MemoryVariableViewModel = viewModel()) {
+fun MemoryVariableScreen(onBack: () -> Unit, viewModel: MemoryVariableViewModel = viewModel()) {
+    SmallTopAppBar(
+        title = {},
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
+        },
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-data class UiState(
+data class GameState(
     val gameStarted: Boolean = false,
     val currentNumber: Int = -1,
     val correct: Int = 0
@@ -22,10 +22,10 @@ class MemoryDifferenceViewModel : ViewModel() {
     private var previousNumber = mutableStateOf(-1)
     private var index = 0
 
-    val uiState: StateFlow<UiState> =
+    val gameState: StateFlow<GameState> =
         combine(_gameStarted, _currentNumber, _correct) { gameStarted, currentNumber, correct ->
-            UiState(gameStarted, currentNumber, correct)
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), UiState())
+            GameState(gameStarted, currentNumber, correct)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), GameState())
 
     init {
         var num = (1..9).random()

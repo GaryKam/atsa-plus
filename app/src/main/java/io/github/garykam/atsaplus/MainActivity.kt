@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
 import io.github.garykam.atsaplus.navigation.AppNavigation
 import io.github.garykam.atsaplus.ui.theme.AppTheme
 
@@ -31,7 +30,7 @@ private fun AtsaPlusApp() {
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
         ) {
-            AppNavigation(rememberNavController())
+            AppNavigation()
         }
     }
 }
