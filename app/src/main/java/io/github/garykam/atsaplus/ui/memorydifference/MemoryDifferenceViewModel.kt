@@ -9,13 +9,11 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 data class GameState(
-    val gameStarted: Boolean = false,
     val currentNumber: Int = -1,
     val correct: Int = 0
 )
 
 class MemoryDifferenceViewModel : ViewModel() {
-    private var _gameStarted = MutableStateFlow(false)
     private var _currentNumber = MutableStateFlow(-1)
     private var _correct = MutableStateFlow(0)
     private val numberList = mutableListOf<Int>()
@@ -23,8 +21,8 @@ class MemoryDifferenceViewModel : ViewModel() {
     private var index = 0
 
     val gameState: StateFlow<GameState> =
-        combine(_gameStarted, _currentNumber, _correct) { gameStarted, currentNumber, correct ->
-            GameState(gameStarted, currentNumber, correct)
+        combine(_currentNumber, _correct) { currentNumber, correct ->
+            GameState(currentNumber, correct)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), GameState())
 
     init {
@@ -35,14 +33,11 @@ class MemoryDifferenceViewModel : ViewModel() {
                 num = it
             }
         }
-    }
 
-    fun startGame() {
-        _gameStarted.value = true
         _currentNumber.value = numberList[0]
 
         viewModelScope.launch {
-            delay(2000L)
+            delay(3000L)
             updateNumber()
         }
     }

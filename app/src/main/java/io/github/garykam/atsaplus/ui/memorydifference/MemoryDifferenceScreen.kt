@@ -1,9 +1,8 @@
 package io.github.garykam.atsaplus.ui.memorydifference
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,19 +13,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.garykam.atsaplus.utils.NumberPad
 
 @Composable
-fun MemoryDifferenceScreen(onBack: () -> Unit, viewModel: MemoryDifferenceViewModel = viewModel()) {
-    SmallTopAppBar(
-        title = {},
-        navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Back"
-                )
-            }
-        },
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-    )
+fun MemoryDifferenceScreen(viewModel: MemoryDifferenceViewModel = viewModel()) {
+    val gameState by viewModel.gameState.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,30 +23,22 @@ fun MemoryDifferenceScreen(onBack: () -> Unit, viewModel: MemoryDifferenceViewMo
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val gameState by viewModel.gameState.collectAsState()
+        Text(
+            text = "Correct: ${gameState.correct}",
+            modifier = Modifier.padding(bottom = 20.dp),
+            style = MaterialTheme.typography.headlineMedium
+        )
 
-        if (gameState.gameStarted) {
-            Text(
-                text = "Correct: ${gameState.correct}",
-                modifier = Modifier.padding(bottom = 20.dp),
-                style = MaterialTheme.typography.headlineMedium
-            )
+        Text(
+            text = gameState.currentNumber.toString(),
+            style = MaterialTheme.typography.displayLarge
+        )
 
-            Text(
-                text = gameState.currentNumber.toString(),
-                style = MaterialTheme.typography.displayLarge
-            )
-
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                NumberPad { viewModel.checkAnswer(it) }
-            }
-        } else {
-            Button(onClick = { viewModel.startGame() }) {
-                Text(text = "Start")
-            }
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            NumberPad(onClick = { viewModel.checkAnswer(it) })
         }
     }
 }
