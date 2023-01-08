@@ -19,6 +19,7 @@ class MemoryDifferenceViewModel : ViewModel() {
     private val numberList = mutableListOf<Int>()
     private var previousNumber = mutableStateOf(-1)
     private var index = 0
+    private var awaitingAnswer = false
 
     val gameState: StateFlow<GameState> =
         combine(_currentNumber, _correct) { currentNumber, correct ->
@@ -43,16 +44,19 @@ class MemoryDifferenceViewModel : ViewModel() {
     }
 
     fun checkAnswer(answer: Int) {
-        if (answer == abs(previousNumber.value - _currentNumber.value)) {
-            _correct.value++
-        }
+        if (awaitingAnswer) {
+            if (answer == abs(previousNumber.value - _currentNumber.value)) {
+                _correct.value++
+            }
 
-        updateNumber()
+            updateNumber()
+        }
     }
 
     private fun updateNumber() {
         previousNumber.value = _currentNumber.value
         _currentNumber.value = numberList[++index]
+        awaitingAnswer = true
     }
 }
 

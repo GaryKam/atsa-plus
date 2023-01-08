@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.garykam.atsaplus.utils.NumberRow
+import io.github.garykam.atsaplus.ui.components.NumberRow
 
 @Composable
 fun MemoryVariableScreen(onBack: () -> Unit, viewModel: MemoryVariableViewModel = viewModel()) {

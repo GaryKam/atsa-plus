@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.garykam.atsaplus.utils.NumberPad
+import io.github.garykam.atsaplus.ui.components.NumberPad
 
 @Composable
 fun MemoryDifferenceScreen(viewModel: MemoryDifferenceViewModel = viewModel()) {

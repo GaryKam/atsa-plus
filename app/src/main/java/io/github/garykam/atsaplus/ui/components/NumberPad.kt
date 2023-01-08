@@ -1,4 +1,4 @@
-package io.github.garykam.atsaplus.utils
+package io.github.garykam.atsaplus.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
