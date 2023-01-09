@@ -9,6 +9,8 @@ import io.github.garykam.atsaplus.ui.home.HomeScreen
 import io.github.garykam.atsaplus.ui.memorydifference.MemoryDifferenceScreen
 import io.github.garykam.atsaplus.ui.memorydifference.MemoryDifferenceWelcomeScreen
 import io.github.garykam.atsaplus.ui.memoryvariable.MemoryVariableScreen
+import io.github.garykam.atsaplus.ui.spatialrelationship.SpatialRelationshipScreen
+import io.github.garykam.atsaplus.ui.spatialrelationship.SpatialRelationshipWelcomeScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController = rememberNavController()) {
@@ -16,7 +18,8 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
         composable(route = Home.route) {
             HomeScreen(
                 onClickMemoryDifference = { navController.navigate(MemoryDifferenceWelcome.route) },
-                onClickMemoryVariable = { navController.navigate(MemoryVariable.route) }
+                onClickMemoryVariable = { navController.navigate(MemoryVariable.route) },
+                onClickSpatialRelationship = { navController.navigate(SpatialRelationshipWelcome.route) }
             )
         }
 
@@ -33,6 +36,17 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
 
         composable(route = MemoryVariable.route) {
             MemoryVariableScreen(onBack = { navController.popBackStack() })
+        }
+
+        composable(route = SpatialRelationshipWelcome.route) {
+            SpatialRelationshipWelcomeScreen(
+                onStart = { navController.navigate(SpatialRelationship.route) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(route = SpatialRelationship.route) {
+            SpatialRelationshipScreen()
         }
     }
 }

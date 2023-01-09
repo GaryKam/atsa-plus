@@ -14,7 +14,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HomeScreen(
     onClickMemoryDifference: () -> Unit,
-    onClickMemoryVariable: () -> Unit
+    onClickMemoryVariable: () -> Unit,
+    onClickSpatialRelationship: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -24,11 +25,15 @@ fun HomeScreen(
         Text(text = "Select a Game", style = MaterialTheme.typography.headlineMedium)
 
         Button(onClick = onClickMemoryDifference) {
-            Text(text = "Memory: Difference")
+            Text(text = "Difference Memorization")
         }
 
         Button(onClick = onClickMemoryVariable) {
-            Text(text = "Memory: Variables")
+            Text(text = "Variable Memorization")
+        }
+
+        Button(onClick = onClickSpatialRelationship) {
+            Text(text = "Spatial Relationship")
         }
     }
 }

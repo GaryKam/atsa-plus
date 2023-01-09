@@ -19,3 +19,11 @@ object MemoryDifference : Destination {
 object MemoryVariable : Destination {
     override val route: String = "memory_variable"
 }
+
+object SpatialRelationshipWelcome : Destination {
+    override val route: String = "spatial_relationship_welcome"
+}
+
+object SpatialRelationship : Destination {
+    override val route: String = "spatial_relationship"
+}
