@@ -1,58 +1,62 @@
 package io.github.garykam.atsaplus.ui.spatialrelationship
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.github.garykam.atsaplus.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun SpatialRelationshipScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Eye(size = 160.dp)
-        Airplane(size = 80.dp)
-        Airplane(size = 160.dp)
+fun SpatialRelationshipScreen(viewModel: SpatialRelationshipViewModel = viewModel()) {
+    val gameState by viewModel.gameState.collectAsState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
+    ) {
+        Box(modifier = Modifier.weight(1F)) {
+            SpatialImage(icon = gameState.eyeIcon)
+            SpatialImage(icon = gameState.smallPlaneIcon)
+            SpatialImage(icon = gameState.largePlaneIcon)
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.1F),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            val configuration = LocalConfiguration.current
+
+            Button(onClick = {
+                viewModel.relocateIcons(
+                    screenWidth = configuration.screenWidthDp,
+                    screenHeight = configuration.screenHeightDp
+                )
+            }) {
+                Text(text = "Relocate")
+            }
+        }
     }
 }
 
 @Composable
-private fun Eye(size: Dp) {
-    val configuration = LocalConfiguration.current
-    var x = configuration.screenWidthDp * Math.random()
-    if (x + size.value >= configuration.screenWidthDp) {
-        x -= size.value
-    }
-    var y = configuration.screenHeightDp * Math.random()
-    if (y + size.value >= configuration.screenHeightDp) {
-        y -= size.value
-    }
-    val rotation = (360 * Math.random()).toFloat()
+private fun SpatialImage(icon: Icon) {
     Image(
-        painter = painterResource(id = R.drawable.eye),
-        contentDescription = "eye",
+        painter = painterResource(id = icon.id),
+        contentDescription = icon.description,
         modifier = Modifier
-            .size(size)
-            .offset(x.dp, y.dp)
-            .rotate(rotation)
-    )
-}
-
-@Composable
-private fun Airplane(size: Dp) {
-    val rotation = (Math.random() * 360).toFloat()
-    Image(
-        painter = painterResource(id = R.drawable.airplane),
-        contentDescription = "airplane",
-        modifier = Modifier
-            .size(size)
-            .rotate(rotation)
+            .size(icon.size)
+            .offset(icon.x, icon.y)
+            .rotate(icon.rotation)
     )
 }

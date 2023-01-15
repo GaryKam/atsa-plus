@@ -1,6 +1,5 @@
 package io.github.garykam.atsaplus.ui.memorydifference
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -14,15 +13,15 @@ data class GameState(
 )
 
 class MemoryDifferenceViewModel : ViewModel() {
-    private var _currentNumber = MutableStateFlow(-1)
-    private var _correct = MutableStateFlow(0)
+    private var currentNumber = MutableStateFlow(-1)
+    private var correct = MutableStateFlow(0)
     private val numberList = mutableListOf<Int>()
-    private var previousNumber = mutableStateOf(-1)
+    private var previousNumber = -1
     private var index = 0
     private var awaitingAnswer = false
 
     val gameState: StateFlow<GameState> =
-        combine(_currentNumber, _correct) { currentNumber, correct ->
+        combine(currentNumber, correct) { currentNumber, correct ->
             GameState(currentNumber, correct)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), GameState())
 
@@ -35,7 +34,7 @@ class MemoryDifferenceViewModel : ViewModel() {
             }
         }
 
-        _currentNumber.value = numberList[0]
+        currentNumber.value = numberList[0]
 
         viewModelScope.launch {
             delay(3000L)
@@ -45,8 +44,8 @@ class MemoryDifferenceViewModel : ViewModel() {
 
     fun checkAnswer(answer: Int) {
         if (awaitingAnswer) {
-            if (answer == abs(previousNumber.value - _currentNumber.value)) {
-                _correct.value++
+            if (answer == abs(previousNumber - currentNumber.value)) {
+                correct.value++
             }
 
             updateNumber()
@@ -54,8 +53,8 @@ class MemoryDifferenceViewModel : ViewModel() {
     }
 
     private fun updateNumber() {
-        previousNumber.value = _currentNumber.value
-        _currentNumber.value = numberList[++index]
+        previousNumber = currentNumber.value
+        currentNumber.value = numberList[++index]
         awaitingAnswer = true
     }
 }
